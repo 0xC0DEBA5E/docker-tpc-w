@@ -1,0 +1,105 @@
+# Purpose:
+A benchmarking platform to compare the different database approaches. Based on the <a href="http://www.tpc.org/tpcw/">TPC-W</a> specification it allows to compare the latency between different implementations. 
+
+# About: 
+Implementing the operations that interact with the database on the TPC-W benchmark (11 of the 14 original) this platform includes a <a href="http://cassandra.apache.org/">Cassandra</a>, <a href="http://www.mysql.com/">MySQL</a>, <a href="https://github.com/PedroGomes/datanucleus-cassandra">Datanucleus Cassandra</a> and a  <a href="http://basho.com/products/riak-overview/">Riak</a>,  functional ports of that specification. 
+
+A basic consistency workload is also available that allows the user to measure the effects of no ACID guaranties.   
+
+# Build: 
+
+Execute:
+<code>
+- ant 
+</code>
+	
+Used libraries: 
+(not that the manifest.mf is generated during the building process so the use of different versions my be allowed) : 
+
+Benchmark platform: 
+- colt.jar (Colt Project)
+- jackson-core-asl-1.0.1 and jackson-mapper-asl-1.0.1 (Jackson Java JSON-processor)
+- log4j-1.2.13.jar 
+
+Mysql:
+- mysql-connector-java-5.1.12-bin.jar
+
+Cassandra (0.Y.X): 
+- libthrift.Z.jar 
+- apache-cassandra-0.Y.X.jar
+- apache-cassandra-thrift-0.8.5.jar (0.8)
+
+Datanucleus Cassandra: 
+- asm-3.1.jar (Datanucleus)
+- datanucleus-core-3.0.2.jar (Datanucleus)
+- datanucleus-enhancer-3.0.1.jar (Datanucleus)
+- jdo-api-3.0.jar 
+- datanucleus-cassandra-0.1.jar (see <a href="https://github.com/PedroGomes/datanucleus-cassandra">Datanucleus Cassandra</a> )
+
+Riak 0.14: 
+- google-gson-stream-1.7.1.jar
+- gson-1.7.1.jar
+- riak-java-client (with the new API)
+
+
+# Configuration: 
+
+The project comes with various templates for the different databases and workloads under the conf_template folder, use this folder to create your own. After that, rename the benchmarkingsuite.properties.template to benchmarkingsuite.propertiesm, defining here where your folder will be so the ant process creates a fully functional binary.   
+
+This database allows the use of different populating classes, database executing interfaces and workload factories. To configure the benchmark the user must edit the base Benchmark JSON file and the associated workload and database files accordingly with the context.  
+
+
+# Use:
+                                            
+    -w  <Workload alias>      : a defined workload alias                                                     
+    -d  <Database alias>      : a defined database alias                                                     
+    -t  <Num Threads>         : number of executing threads                                                  
+    -o  <Num Operations>      : number of operations to be executed per thread                              
+    -df <distribution factor> : a distribution factor that influences the power law skew on product selection
+    -tt <time milliseconds>   : override the default TPC-W think time to the defined value         
+          
+   ------------------------------------------------------      
+                                           
+    -c   : clean the database                                                                                
+    -cb  : special clean (outdated)                                                                   
+    -p   : populate and execute                                                                                        
+    -pop : populate and return (can be used with -c)   
+                                                    
+   ------------------------------------------------------    
+                                                 
+    -m        : run as master                                                                                
+    -s <port> : run as slave in the defined port
+       
+# Database configuration:
+
+Mysql:
+- The population process creates the tables and if the user uses the remove flag, the platform preforms a drop to the database and recreates it (or creates it if non existent).
+
+Cassandra 0.6:
+- Use the schema shown on the wiki
+
+Cassandra 0.7+:
+- Create the keyspace as defined by you in the configuration file with your options, and the database will create the column families. 
+ 
+Riak 0.14:
+- Buckets are created automatically
+
+# Warnings and needed improvements:
+- Based on TPCW v1.8
+- The population process started in a generic form and for that reason the Cassandra populator reads what fields it should use to create super columns; maybe this doesn't make sense anymore.
+- One of the problems in the MySQL benchmark is the client side generation of ids. Avoiding the overhead of transactions or auto increment (synchronization mechanisms as seen in other implementations are not suitable with the multi node mode) some of the queries may have minor changes due to their ids. 
+- On consistency workload the stock of items is usually a high number to ease the analyze of the data, on normal TPCW workloads the stock is updated when the coded minimum is reached as supposed, but in Cassandra no guaranties are made about the outcome of that process.   
+- The Riak implementation doesn't support consistency level configuration.
+- The Best Sellers operation in the the Riak implementation must be improved because it may not work properly if it is called concurrently
+
+# Feedback
+
+Updated source and an issue tracker are available at:
+	
+    https://github.com/PedroGomes/TPCw-benchmark
+
+Your feedback is welcome.
+
+
+
+

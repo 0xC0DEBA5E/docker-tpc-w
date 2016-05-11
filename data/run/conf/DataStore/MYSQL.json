@@ -1,0 +1,22 @@
+{
+"DataBaseInfo":{
+	"database":"TPCW",
+	"user":"root",
+	"password":"sdfiiouuiowesoij"
+	},
+"MasterConnections":{
+	"localhost":"3306"
+	},
+"SlaveConnections":{
+	"localhost":"3306"
+	},
+"ReadWritePaths":{
+	"Writes":"Master",
+	"Reads":"Slaves"
+	},
+"OtherConnections":{
+	},
+"Instructions":{
+	"writes reads":" Can assume ALL,MASTER or SLAVE values. Only sets machine types, not addresses"
+	}
+}

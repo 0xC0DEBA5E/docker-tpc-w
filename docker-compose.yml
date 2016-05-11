@@ -1,0 +1,38 @@
+version: '2'
+services:
+
+  java:
+    build: .
+    ports:
+    - "8080:8080"
+    links:
+      - mysql
+    volumes:
+      - /home/benni/workspace/docker/nosql-tpc-w/data:/opt/
+    depends_on:
+      - mysql
+
+  mysql:
+    image: mysql
+    ports:
+      - "3306:3306"
+    environment:
+        MYSQL_ROOT_PASSWORD: sdfiiouuiowesoij
+        MYSQL_USER: dev
+        MYSQL_PASSWORD: kjnsegwknjewgknj
+        MYSQL_DATABASE: TPCW
+
+  phpmyadmin:
+      build: phpmyadmin/.
+      environment:
+       - PMA_HOST=mysql
+      restart: always
+      ports:
+       - 9999:80
+      links:
+       - mysql
+      command: dockerize -wait tcp://db:3306
+
+
+#  cassandra:
+#    image: cassandra
