@@ -5,10 +5,10 @@
 	"password":"sdfiiouuiowesoij"
 	},
 "MasterConnections":{
-	"localhost":"3306"
+	"mysql":"3306"
 	},
 "SlaveConnections":{
-	"localhost":"3306"
+	"mysql":"3306"
 	},
 "ReadWritePaths":{
 	"Writes":"Master",
